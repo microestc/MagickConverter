@@ -23,17 +23,14 @@ namespace MagickConverter
 
         protected void ConvertFinished(object sender, ConvertFinishedEventArgs args)
         {
-            var inf = args.TaskInfo;
+            var setup = args.Setup;
 
         }
 
         protected void ConvertProgress(object sender, ConvertProgressEventArgs args)
         {
-            if (MagickTask.ProgressCompleted(sender, args, out var mediaId)) { }
-            if (MagickTask.GainedDuration(sender, args, out var mediaId))
-            {
-
-            }
+            //if (MagickTask.ProgressCompleted(sender, args, out var setup)) { }
+            //if (MagickTask.GainedDuration(sender, args, out var setup)) { }
         }
     }
 }

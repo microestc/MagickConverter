@@ -10,13 +10,13 @@ namespace MagickConverter
     {
         private readonly MagickProgress _progress;
         private readonly string _workingDir;
-        private readonly EnvironmentConfig _envConfig;
+        private readonly EnvironmentCmd _envCmd;
         private readonly TaskSetup _taskSetup;
-        private DateTime _startTime;
+        private DateTime StartTime { get; set; }
 
         public Guid Id { get; set; }
 
-        public string MediaId { get; private set; }
+        public TaskSetup TaskSetup { get; private set; }
 
         public bool IsFinished { get; private set; } = false;
         internal Action TaskFinishedCallback { get; set; }
@@ -28,14 +28,15 @@ namespace MagickConverter
         public MagickTask(TaskSetup setup)
         {
             Id = Guid.NewGuid();
+            TaskSetup = setup;
             _workingDir = new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName;
             _progress = new MagickProgress(args => ConvertProgressEvent(this, args));
-            _envConfig = new EnvironmentConfig();
+            _envCmd = new EnvironmentCmd();
         }
 
         public void Convert()
         {
-            _startTime = DateTime.Now;
+            StartTime = DateTime.Now;
             if (IsFinished)
                 throw new Exception("Cannot start task when it's finished");
             try
@@ -53,7 +54,7 @@ namespace MagickConverter
         {
             var startInfo = new ProcessStartInfo
             {
-                FileName = _envConfig.Executable,
+                FileName = _envCmd.Executable,
                 Arguments = _taskSetup.GetCmdLineParams(),
                 WorkingDirectory = _workingDir,
                 UseShellExecute = false,
@@ -99,35 +100,35 @@ namespace MagickConverter
             ConvertFinishedEvent(sender, eargs);
         }
 
-        public static bool ProgressCompleted(object sender, ConvertProgressEventArgs eargs, out string mediaId)
+        public static bool ProgressCompleted(object sender, ConvertProgressEventArgs eargs, out TaskSetup setup)
         {
             if (eargs.IsCompleted)
             {
                 if (sender is MagickTask)
                 {
-                    mediaId = (sender as MagickTask).MediaId;
+                    setup = (sender as MagickTask).TaskSetup;
                     return true;
                 }
-                mediaId = null;
+                setup = null;
                 return true;
             }
-            mediaId = null;
+            setup = null;
             return false;
         }
 
-        public static bool GainedDuration(object sender, ConvertProgressEventArgs eargs, out string mediaId)
+        public static bool GainedDuration(object sender, ConvertProgressEventArgs eargs, out TaskSetup setup)
         {
             if (eargs.IsGainedDuration)
             {
                 if (sender is MagickTask)
                 {
-                    mediaId = (sender as MagickTask).MediaId;
+                    setup = (sender as MagickTask).TaskSetup;
                     return true;
                 }
-                mediaId = null;
+                setup = null;
                 return true;
             }
-            mediaId = null;
+            setup = null;
             return false;
         }
     }

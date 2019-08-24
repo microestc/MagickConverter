@@ -2,11 +2,11 @@
 
 namespace MagickConverter
 {
-    public class EnvironmentConfig
+    public class EnvironmentCmd
     {
         public string Executable { get; }
 
-        public EnvironmentConfig()
+        public EnvironmentCmd()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {

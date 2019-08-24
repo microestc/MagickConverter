@@ -6,6 +6,8 @@ namespace MagickConverter
 {
     public class MagickProgress
     {
+        private static readonly Regex _durationRegex = new Regex("Duration:\\s(?<Duration>[0-9:.]+)([,]|$)", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex _progressRegex = new Regex("time=(?<progress>[0-9:.]+)\\s", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
         private readonly Action<ConvertProgressEventArgs> ProgressCallback;
         private TimeSpan _totalDuration = TimeSpan.FromMilliseconds(1.0);
 
@@ -26,7 +28,7 @@ namespace MagickConverter
 
         private void TryGetDuration(string line)
         {
-            if (!line.Contains("Duration"))
+            if (!line.Contains("=>"))
                 return;
             Match match = _durationRegex.Match(line);
             if (!match.Success)
@@ -52,7 +54,7 @@ namespace MagickConverter
 
         private void FetchIsComplete(string line)
         {
-            if (!line.Contains("Qavg"))
+            if (!line.Contains("=>"))
                 return;
             ProgressCallback(new ConvertProgressEventArgs(_totalDuration, _progress, false, true));
         }
