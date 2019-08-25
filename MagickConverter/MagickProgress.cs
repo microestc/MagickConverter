@@ -6,10 +6,11 @@ namespace MagickConverter
 {
     public class MagickProgress
     {
-        private static readonly Regex _durationRegex = new Regex("Duration:\\s(?<Duration>[0-9:.]+)([,]|$)", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
-        private static readonly Regex _progressRegex = new Regex("time=(?<progress>[0-9:.]+)\\s", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex _durationRegex = new Regex(@"u:\s\b(?<Duration>[0-9:.]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex _progressRegex = new Regex(@"u:\s\b(?<Progress>[0-9:.]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
         private readonly Action<ConvertProgressEventArgs> ProgressCallback;
         private TimeSpan _totalDuration = TimeSpan.FromMilliseconds(1.0);
+        private TimeSpan _processed = TimeSpan.FromMilliseconds(0.0);
 
         public MagickProgress(Action<ConvertProgressEventArgs> progressCallback)
         {
@@ -20,9 +21,9 @@ namespace MagickConverter
         {
             if (string.IsNullOrEmpty(line))
                 return;
-            FetchIsComplete(line);
             if (_totalDuration == TimeSpan.FromMilliseconds(1.0))
                 TryGetDuration(line);
+            FetchIsComplete(line);
             FetchProgress(line);
         }
 
@@ -42,21 +43,21 @@ namespace MagickConverter
         private void FetchProgress(string line)
         {
             Match match = _progressRegex.Match(line);
-            if (!match.Success || !TimeSpan.TryParse(match.Groups["progress"].Value, out _progress))
+            if (!match.Success || !TimeSpan.TryParse(match.Groups["Progress"].Value, out _processed))
                 return;
-            ProgressCallback(new ConvertProgressEventArgs(_totalDuration, _progress, false));
+            ProgressCallback(new ConvertProgressEventArgs(_totalDuration, _processed, false));
         }
 
         private void FetchDuration()
         {
-            ProgressCallback(new ConvertProgressEventArgs(_totalDuration, _progress, true));
+            ProgressCallback(new ConvertProgressEventArgs(_totalDuration, _processed, true));
         }
 
         private void FetchIsComplete(string line)
         {
             if (!line.Contains("=>"))
                 return;
-            ProgressCallback(new ConvertProgressEventArgs(_totalDuration, _progress, false, true));
+            ProgressCallback(new ConvertProgressEventArgs(_totalDuration, _processed, false, true));
         }
     }
 }

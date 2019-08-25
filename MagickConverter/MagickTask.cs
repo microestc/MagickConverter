@@ -10,8 +10,6 @@ namespace MagickConverter
     {
         private readonly MagickProgress _progress;
         private readonly string _workingDir;
-        private readonly EnvironmentCmd _envCmd;
-        private readonly TaskSetup _taskSetup;
         private DateTime StartTime { get; set; }
 
         public Guid Id { get; set; }
@@ -31,7 +29,6 @@ namespace MagickConverter
             TaskSetup = setup;
             _workingDir = new FileInfo(Assembly.GetEntryAssembly().Location).Directory.FullName;
             _progress = new MagickProgress(args => ConvertProgressEvent(this, args));
-            _envCmd = new EnvironmentCmd();
         }
 
         public void Convert()
@@ -54,8 +51,8 @@ namespace MagickConverter
         {
             var startInfo = new ProcessStartInfo
             {
-                FileName = _envCmd.Executable,
-                Arguments = _taskSetup.GetCmdLineParams(),
+                FileName = TaskSetup.Executable,
+                Arguments = TaskSetup.GetCmdLineParams(),
                 WorkingDirectory = _workingDir,
                 UseShellExecute = false,
                 CreateNoWindow = true,
