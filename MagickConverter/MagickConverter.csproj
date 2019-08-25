@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Copyright>microestc co.</Copyright>
+    <PackageId>MagickConverter</PackageId>
+    <Authors>Microestc</Authors>
+    <Company>Microestc Co.</Company>
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>Magick Converter</PackageReleaseNotes>
+    <Product>MagickConverter</Product>
+    <PackageLicenseUrl>https://github.com/microestc/MagickConverter/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/microestc/MagickConverter</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/microestc/MagickConverter</PackageProjectUrl>
+    <RepositoryType>github</RepositoryType>
   </PropertyGroup>
 
 </Project>
