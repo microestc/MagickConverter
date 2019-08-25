@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace MagickConverter
 {
@@ -49,6 +50,8 @@ namespace MagickConverter
         public string Executable { get; }
 
         private string Arg { get; set; } = "";
+
+        public Action<TaskSetup> CompletedCallBack { get; set; }
 
         internal string GetCmdLineParams()
         {

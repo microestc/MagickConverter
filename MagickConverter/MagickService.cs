@@ -1,6 +1,4 @@
 ﻿using MagickConverter.Events;
-using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace MagickConverter
@@ -25,7 +23,9 @@ namespace MagickConverter
         public virtual void ConvertFinished(object sender, ConvertFinishedEventArgs args)
         {
             var setup = args.Setup;
-            File.Delete(setup.Source);
+            setup.CompletedCallBack?.Invoke(setup);
+            if (!string.IsNullOrWhiteSpace(setup.Source))
+                File.Delete(setup.Source);
         }
 
         public virtual void ConvertProgress(object sender, ConvertProgressEventArgs args)
