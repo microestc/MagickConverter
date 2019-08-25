@@ -1,0 +1,2 @@
+# MagickConverter
+imagemagick
