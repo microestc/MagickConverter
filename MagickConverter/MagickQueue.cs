@@ -66,7 +66,7 @@ namespace MagickConverter
             }
         }
 
-        private async void NextTask()
+        private void NextTask()
         {
             if (_isEnabled)
             {
@@ -85,7 +85,7 @@ namespace MagickConverter
                 if (task != null)
                 {
                     CurrrentStatus = QueueStatus.Running;
-                    await Task.Factory.StartNew(() => task.Convert());
+                    task.Convert();
                 }
                 else
                     NotifyQueuePaused();

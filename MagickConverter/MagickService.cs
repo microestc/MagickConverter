@@ -30,10 +30,7 @@ namespace MagickConverter
 
         public virtual void ConvertProgress(object sender, ConvertProgressEventArgs args)
         {
-            if (MagickTask.ProgressCompleted(sender, args, out var setup))
-            {
-
-            }
+            //if (MagickTask.ProgressCompleted(sender, args, out var setup)) { }
             //if (MagickTask.GainedDuration(sender, args, out var setup)) { }
         }
     }
