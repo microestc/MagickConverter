@@ -1,10 +1,11 @@
 ﻿using MagickConverter.Events;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MagickConverter
 {
-    public class MagickService
+    public class MagickService : IMagickService
     {
         private readonly MagickQueue _queue;
 
@@ -21,15 +22,16 @@ namespace MagickConverter
             _queue.EnqueueTask(task);
         }
 
-        protected void ConvertFinished(object sender, ConvertFinishedEventArgs args)
+        public virtual void ConvertFinished(object sender, ConvertFinishedEventArgs args)
         {
             var setup = args.Setup;
-
+            File.Delete(setup.Source);
         }
 
-        protected void ConvertProgress(object sender, ConvertProgressEventArgs args)
+        public virtual void ConvertProgress(object sender, ConvertProgressEventArgs args)
         {
-            if (MagickTask.ProgressCompleted(sender, args, out var setup)) {
+            if (MagickTask.ProgressCompleted(sender, args, out var setup))
+            {
 
             }
             //if (MagickTask.GainedDuration(sender, args, out var setup)) { }
