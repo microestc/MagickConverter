@@ -57,7 +57,7 @@ namespace MagickConverter
         {
             if (!string.IsNullOrWhiteSpace(Cmd))
             {
-                return Cmd;
+                return Arg + " " + Cmd;
             }
             return $"{Arg} -verbose -density 220 -quality 50 {Source} -append {Dest}";
         }
